@@ -16,19 +16,17 @@
   },
   "modes": {
     "window": {
-      "title": "neutralinojs-react-tailwind-template",
-      "width": 800,
-      "height": 500,
-      "minWidth": 400,
-      "minHeight": 200,
+      "title": "neutralino-phaser-template",
+      "width": 1280,
+      "height": 720,
       "fullScreen": false,
-      "alwaysOnTop": false,
+      "alwaysOnTop": true,
       "icon": "/resources/icons/appIcon.png",
       "enableInspector": false,
       "borderless": false,
       "maximize": false,
       "hidden": false,
-      "resizable": true,
+      "resizable": false,
       "exitProcessOnClose": false
     },
     "browser": {
@@ -48,7 +46,7 @@
     }
   },
   "cli": {
-    "binaryName": "neutralinojs-react-tailwind-template",
+    "binaryName": "neutralino-phaser-template",
     "resourcesPath": "/resources/",
     "clientLibrary": "/resources/js/neutralino.js",
     "binaryVersion": "3.0.0",

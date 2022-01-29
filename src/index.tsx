@@ -1,6 +1,37 @@
-import React from 'react'
-import ReactDom from 'react-dom'
+import * as Phaser from "phaser";
+import { MainScene } from "./scenes/Main";
+import { HudScene } from "./scenes/Hud";
+import { PreloadScene } from "./scenes/Preload";
+import { Scene } from "./types";
 
-Neutralino.events.on("ready", () => {
-  ReactDom.render(<div className='text-red-400'>Testing</div>, document.querySelector('#app'))
+Neutralino.events.on("ready", async () => {
+  const isProduction = Neutralino.os.getEnv("ENVIRONMENT") === "production";
+  const config: Phaser.Types.Core.GameConfig = {
+    physics: {
+      default: "arcade",
+      arcade: {
+        gravity: { x: 0, y: 0 },
+        debug: !isProduction,
+      },
+    },
+    banner: false,
+    pixelArt: true,
+    type: Phaser.WEBGL,
+    roundPixels: false,
+    scale: {
+      zoom: 1,
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+      autoRound: false,
+      width: document.body.clientWidth,
+      height: document.body.clientHeight,
+    },
+    zoom: 1.00000001,
+    antialiasGL: false,
+    scene: [PreloadScene, HudScene, MainScene],
+  };
+  const game = new Phaser.Game(config);
+  game.scene.start(Scene.Preload);
 });
+
+console.info(Neutralino.os.getEnv("ENVIRONMENT"));
