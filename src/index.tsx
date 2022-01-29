@@ -4,8 +4,8 @@ import { HudScene } from "./scenes/Hud";
 import { PreloadScene } from "./scenes/Preload";
 import { Scene } from "./types";
 
-Neutralino.events.on("ready", async () => {
-  const isProduction = Neutralino.os.getEnv("ENVIRONMENT") === "production";
+Neutralino.events.on("ready", () => {
+  const isProduction = NL_ENVIRONMENT === "production";
   const config: Phaser.Types.Core.GameConfig = {
     physics: {
       default: "arcade",
@@ -33,5 +33,3 @@ Neutralino.events.on("ready", async () => {
   const game = new Phaser.Game(config);
   game.scene.start(Scene.Preload);
 });
-
-console.info(Neutralino.os.getEnv("ENVIRONMENT"));
