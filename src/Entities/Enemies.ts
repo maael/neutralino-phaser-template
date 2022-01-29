@@ -1,5 +1,7 @@
 import * as Phaser from "phaser";
+import events from "~/util/events";
 import Actor from "./Actor";
+import { Bullet } from "./Bullet";
 
 export default class Enemy extends Actor {
   constructor(scene) {
@@ -8,26 +10,58 @@ export default class Enemy extends Actor {
   rangeCircle: Phaser.GameObjects.Shape;
   target: null | { x: number; y: number; isPlayer: boolean };
   lastPlace: { x: number; y: number };
-  speed: number = 50;
+  speed = 30;
+  aggroRange = 150;
+  isInitialised = false;
+  debug: false;
+  light: Phaser.GameObjects.Light;
+  damage = 2;
   create(x: number, y: number) {
+    if (this.debug) {
+      this.rangeCircle = this.scene.add.circle(
+        0,
+        0,
+        this.aggroRange,
+        0xff0000,
+        0.05
+      );
+      this.add(this.rangeCircle);
+    }
     super.create(x, y);
+
     this.sprite.setTint(0xff00ff);
-    this.rangeCircle = this.scene.add.circle(0, 0, 100, 0xff0000, 0.1);
-    this.add(this.rangeCircle);
+
+    this.light = this.scene.lights.addLight(0, 0, 50, 0xff0000, 0.4);
+  }
+  takeHit(bullet: Bullet, damage: number) {
+    if (!bullet.active) return;
+    this.health = Math.max(0, this.health - damage);
+    if (this.health === 0 && this.active) {
+      this.light.intensity = 0;
+      this.destroy();
+      events.emit("kill:enemy");
+    }
+  }
+  update(time: number, delta: number) {
+    if (!this.isInitialised) return;
+    super.update(time, delta);
+    this.light.x = this.x;
+    this.light.y = this.y;
   }
   updateVelocity(time: number, delta: number) {
     const sprintModifier = this.target && this.target.isPlayer ? 2 : 1;
     const bodies = this.scene.physics.overlapCirc(
       this.x,
       this.y,
-      100,
+      this.aggroRange,
       true,
       true
     );
     const player = [...bodies].find(
       (b) => (b.gameObject as any).key === "player"
     );
-    this.rangeCircle.setFillStyle(0xff0000, player ? 0.5 : 0.05);
+    if (this.debug)
+      this.rangeCircle.setFillStyle(0xff0000, player ? 0.2 : 0.05);
     if (player) {
       this.target = { x: player.x, y: player.y, isPlayer: true };
     } else {

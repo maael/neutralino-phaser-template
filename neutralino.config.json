@@ -22,7 +22,7 @@
       "fullScreen": false,
       "alwaysOnTop": true,
       "icon": "/resources/icons/appIcon.png",
-      "enableInspector": false,
+      "enableInspector": true,
       "borderless": false,
       "maximize": false,
       "hidden": false,
@@ -34,15 +34,11 @@
         "TEST": "Test value browser",
         "ENVIRONMENT": "development"
       },
-      "nativeBlockList": [
-        "filesystem.*"
-      ]
+      "nativeBlockList": ["filesystem.*"]
     },
     "cloud": {
       "url": "/resources/#cloud",
-      "nativeAllowList": [
-        "app.*"
-      ]
+      "nativeAllowList": ["app.*"]
     }
   },
   "cli": {

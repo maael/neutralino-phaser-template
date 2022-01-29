@@ -11,7 +11,7 @@ Neutralino.events.on("ready", () => {
       default: "arcade",
       arcade: {
         gravity: { x: 0, y: 0 },
-        debug: !isProduction,
+        debug: false, //!isProduction,
       },
     },
     banner: false,
