@@ -16,11 +16,7 @@ export default class Enemy extends Actor {
     this.add(this.rangeCircle);
   }
   updateVelocity(time: number, delta: number) {
-    return { sprintModifier: this.target && this.target.isPlayer ? 2 : 1 };
-  }
-  update(time, delta) {
-    super.update(time, delta);
-    if (!this.rangeCircle) return;
+    const sprintModifier = this.target && this.target.isPlayer ? 2 : 1;
     const bodies = this.scene.physics.overlapCirc(
       this.x,
       this.y,
@@ -58,5 +54,6 @@ export default class Enemy extends Actor {
       this.target.y,
       this.speed * this.sprintModifier
     );
+    return { sprintModifier };
   }
 }
