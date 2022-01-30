@@ -18,13 +18,13 @@ export class MainScene extends Phaser.Scene {
     this.world.player = new Player(this);
     this.world.enemies = this.add.group([], { runChildUpdate: true });
     this.world.loot = this.add.group([], { runChildUpdate: true });
-    for (let i = 0; i < (NL_ENVIRONMENT === "production" ? 4 : 2); i++) {
-      this.world.spawnEnemy();
-    }
   }
   create() {
     this.meta = { kills: 0, startedAt: 0, lastAliveAt: 0 };
     this.world.create();
+    for (let i = 0; i < (NL_ENVIRONMENT === "production" ? 4 : 2); i++) {
+      this.world.spawnEnemy();
+    }
     events.on("kill:enemy", () => {
       this.meta.kills++;
     });
@@ -32,7 +32,10 @@ export class MainScene extends Phaser.Scene {
   update(time, delta) {
     this.meta.startedAt = time;
     this.world.player.update(time, delta);
-    if (this.world.enemies.getLength() < 10 && Math.random() > 0.9) {
+    if (
+      this.world.enemies.getLength() < (DEBUG ? 0 : 10) &&
+      Math.random() > 0.9
+    ) {
       this.world.spawnEnemy();
     }
     if (this.world.player.active) {

@@ -69,12 +69,20 @@ export default class World {
       this.spawnLoot(data.x, data.y, item);
     });
     this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.Bone);
+    this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.BronzeCoin);
+    this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.BlueNecklace);
   }
   spawnEnemy() {
     const enemy = new Enemy(this.scene, EnemyType.EvilThief);
     enemy.create(
-      Phaser.Math.Between(this.player.x - 100, this.player.x + 100),
-      Phaser.Math.Between(this.player.y - 100, this.player.y + 100)
+      Math.max(
+        10,
+        Phaser.Math.Between(this.player.x - 100, this.player.x + 100)
+      ),
+      Math.max(
+        10,
+        Phaser.Math.Between(this.player.y - 100, this.player.y + 100)
+      )
     );
     this.enemies.add(enemy);
   }

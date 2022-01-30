@@ -12,6 +12,11 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image("tiles-1", "tiles/jawbreaker_tiles.png");
 
     /**
+     * UX
+     */
+    this.load.image("blue-button", "ux/BlueBtn.png");
+
+    /**
      * Player
      */
     this.load.spritesheet("player", "sprites/player.png", {

@@ -4,6 +4,8 @@ import { HudScene } from "./scenes/Hud";
 import { PreloadScene } from "./scenes/Preload";
 import { Scene } from "./types";
 
+DEBUG = false;
+
 Neutralino.events.on("ready", () => {
   const isProduction = NL_ENVIRONMENT === "production";
   const config: Phaser.Types.Core.GameConfig = {
@@ -11,7 +13,7 @@ Neutralino.events.on("ready", () => {
       default: "arcade",
       arcade: {
         gravity: { x: 0, y: 0 },
-        debug: false, //!isProduction,
+        debug: DEBUG, // || !isProduction,
       },
     },
     banner: false,

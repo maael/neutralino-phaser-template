@@ -10,8 +10,9 @@ export default {
     sprite: "sprites/player.png",
     tint: 0xff0000,
     loot: {
-      [ItemSprite.Bone]: 0.3,
-      [ItemSprite.HealthPotion1]: 0.7,
+      [ItemSprite.Bone]: 0.2,
+      [ItemSprite.HealthPotion1]: 0.3,
+      [ItemSprite.BronzeCoin]: 0.3,
     },
   },
   [EnemyType.IceThief]: {
