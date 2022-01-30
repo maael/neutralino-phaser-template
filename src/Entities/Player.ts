@@ -1,7 +1,11 @@
 import * as Phaser from "phaser";
+import items from "~/data/items";
+import { ItemSprite } from "~/types";
 import events from "~/util/events";
 import Actor from "./Actor";
 import { Bullets } from "./Bullet";
+import Enemy from "./Enemies";
+import Loot from "./Loot";
 
 export default class Player extends Actor {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -12,6 +16,7 @@ export default class Player extends Actor {
   };
   bullets: Bullets;
   light: Phaser.GameObjects.Light;
+  inventory: ItemSprite[] = [];
   constructor(scene) {
     super(scene, "player", "sprites/player.png", 0x00ff00);
   }
@@ -34,12 +39,24 @@ export default class Player extends Actor {
     this.light = this.scene.lights.addLight(0, 0, 400, 0xdddddd, 0.8);
   }
   onCollide(obj) {
-    this.health = Math.max(0, this.health - obj.damage);
-    if (this.health === 0 && this.active) {
-      this.light.intensity = 0;
-      this.setActive(false);
-      this.setVisible(false);
-      events.emit("died", (this.scene as any).meta);
+    if (obj instanceof Enemy) {
+      this.health = Math.max(0, this.health - obj.damage);
+      if (this.health === 0 && this.active) {
+        this.light.intensity = 0;
+        this.setActive(false);
+        this.setVisible(false);
+        events.emit(
+          "died",
+          Object.assign((this.scene as any).meta, { inventory: this.inventory })
+        );
+      }
+    } else if (obj instanceof Loot) {
+      if (items[obj.item]) {
+        items[obj.item](this);
+      } else {
+        this.inventory.push(obj.item);
+      }
+      obj.destroy();
     }
   }
   update(time: number, delta: number) {

@@ -23,6 +23,7 @@ export default class Actor extends Phaser.GameObjects.Container {
     super(scene);
     this.key = key;
     this.texture = texture;
+    this.scene = scene;
     if (tint) this.tint = tint;
   }
 

@@ -1,11 +1,16 @@
 import * as Phaser from "phaser";
+import enemyData, { EnemyType } from "~/data/enemies";
+import { ItemSprite } from "~/types";
+import events from "~/util/events";
 import Enemy from "./Enemies";
+import Loot, { chooseFromTable } from "./Loot";
 import Player from "./Player";
 
 export default class World {
   scene: Phaser.Scene;
   player: Player;
   enemies: Phaser.GameObjects.Group;
+  loot: Phaser.GameObjects.Group;
   BLOCKING_TILES = [13];
   map: Phaser.Tilemaps.Tilemap;
   constructor(scene) {
@@ -49,17 +54,31 @@ export default class World {
     this.scene.physics.add.collider(this.player, this.enemies, (ob1, ob2) => {
       if ((ob1 as any).onCollide) (ob1 as any).onCollide(ob2);
     });
+    this.scene.physics.add.collider(this.player, this.loot, (ob1, ob2) => {
+      if ((ob1 as any).onCollide) (ob1 as any).onCollide(ob2);
+    });
     this.scene.physics.add.collider(this.enemies, layer);
     this.scene.physics.add.collider(this.enemies, this.enemies);
     this.scene.lights.enable();
     this.scene.lights.setAmbientColor(0x808080);
+    events.on("kill:enemy", (data) => {
+      const table = enemyData[data.type]?.loot;
+      if (!table) return;
+      const item = chooseFromTable(table);
+      if (!item) return;
+      this.spawnLoot(data.x, data.y, item);
+    });
+    this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.Bone);
   }
   spawnEnemy() {
-    const enemy = new Enemy(this.scene);
+    const enemy = new Enemy(this.scene, EnemyType.EvilThief);
     enemy.create(
       Phaser.Math.Between(this.player.x - 100, this.player.x + 100),
       Phaser.Math.Between(this.player.y - 100, this.player.y + 100)
     );
     this.enemies.add(enemy);
+  }
+  spawnLoot(x: number, y: number, item: ItemSprite) {
+    this.loot.add(new Loot(this.scene, x, y, item));
   }
 }

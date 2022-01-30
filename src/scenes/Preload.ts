@@ -20,6 +20,14 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     /**
+     * Items
+     */
+    this.load.spritesheet("items", "sprites/kyrise.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+
+    /**
      * FX
      */
     this.load.spritesheet("orb-rotate", "fx/orb-rotate.png", {

@@ -5,3 +5,14 @@ export enum Scene {
   Hud = "Hud",
   Settings = "Settings",
 }
+
+export enum ItemSprite {
+  Bone = 20,
+  BronzeCoin = 100,
+  BlueNecklace = 220,
+  HealthPotion1 = 229,
+  ManaPotion1 = 230,
+  EmptyPotion1 = 238,
+  HealthPotion2 = 239,
+  ManaPotion2 = 240,
+}

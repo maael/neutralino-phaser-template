@@ -2,10 +2,11 @@ import * as Phaser from "phaser";
 import events from "~/util/events";
 import Actor from "./Actor";
 import { Bullet } from "./Bullet";
+import enemyData, { EnemyType } from "../data/enemies";
 
 export default class Enemy extends Actor {
-  constructor(scene) {
-    super(scene, "enemy", "sprites/player.png");
+  constructor(scene, type: EnemyType) {
+    super(scene, type, enemyData[type].sprite);
   }
   rangeCircle: Phaser.GameObjects.Shape;
   target: null | { x: number; y: number; isPlayer: boolean };
@@ -39,7 +40,7 @@ export default class Enemy extends Actor {
     if (this.health === 0 && this.active) {
       this.light.intensity = 0;
       this.destroy();
-      events.emit("kill:enemy");
+      events.emit("kill:enemy", { x: this.x, y: this.y, type: this.key });
     }
   }
   update(time: number, delta: number) {

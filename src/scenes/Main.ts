@@ -17,6 +17,7 @@ export class MainScene extends Phaser.Scene {
     this.scene.sendToBack();
     this.world.player = new Player(this);
     this.world.enemies = this.add.group([], { runChildUpdate: true });
+    this.world.loot = this.add.group([], { runChildUpdate: true });
     for (let i = 0; i < (NL_ENVIRONMENT === "production" ? 4 : 2); i++) {
       this.world.spawnEnemy();
     }
