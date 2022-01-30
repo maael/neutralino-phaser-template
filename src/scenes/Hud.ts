@@ -8,7 +8,7 @@ export class HudScene extends Phaser.Scene {
   }
   create() {
     this.add.image(40, 40, "blue-button").setScale(2);
-    this.add.image(40, 40, "orb-rotate", 0).setScale(0.8);
+    this.add.image(40, 38, "orb-rotate", 0).setScale(0.8);
     this.add.text(36, 55, "Q", {
       color: "#FFFFFF",
       fontFamily: "FutilePro",
