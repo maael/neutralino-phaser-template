@@ -2,11 +2,14 @@ import * as Phaser from "phaser";
 import events from "~/util/events";
 import Actor from "./Actor";
 import { Bullet } from "./Bullet";
-import enemyData, { EnemyType } from "../data/enemies";
+import enemyData, { EnemyType, EnemyData } from "../data/enemies";
+import { floatingText } from "~/util/text";
 
 export default class Enemy extends Actor {
+  meta: EnemyData;
   constructor(scene, type: EnemyType) {
     super(scene, type, enemyData[type].sprite);
+    this.meta = enemyData[type];
   }
   rangeCircle: Phaser.GameObjects.Shape;
   target: null | { x: number; y: number; isPlayer: boolean };
@@ -30,17 +33,31 @@ export default class Enemy extends Actor {
     }
     super.create(x, y);
 
-    this.sprite.setTint(0xff00ff);
+    this.sprite.setTint(this.meta.tint);
 
-    this.light = this.scene.lights.addLight(0, 0, 50, 0xff0000, 0.4);
+    this.light = this.scene.lights.addLight(0, 0, 50, this.meta.tint, 0.4);
   }
   takeHit(bullet: Bullet, damage: number) {
     if (!bullet.active) return;
     this.health = Math.max(0, this.health - damage);
+    floatingText(
+      this.scene,
+      this.x - 4 + Phaser.Math.Between(-6, 6),
+      this.y - 21 + Phaser.Math.Between(-1, 6),
+      `-${damage}`,
+      "#FF0000",
+      2,
+      800,
+      6
+    );
     if (this.health === 0 && this.active) {
       this.light.intensity = 0;
       this.destroy();
-      events.emit("kill:enemy", { x: this.x, y: this.y, type: this.key });
+      events.emit("kill:enemy", {
+        x: this.x,
+        y: this.y,
+        type: this.key,
+      });
     }
   }
   update(time: number, delta: number) {
@@ -62,7 +79,7 @@ export default class Enemy extends Actor {
       (b) => (b.gameObject as any).key === "player"
     );
     if (this.debug)
-      this.rangeCircle.setFillStyle(0xff0000, player ? 0.2 : 0.05);
+      this.rangeCircle.setFillStyle(this.meta.tint, player ? 0.2 : 0.05);
     if (player) {
       this.target = { x: player.x, y: player.y, isPlayer: true };
     } else {

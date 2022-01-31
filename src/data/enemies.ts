@@ -5,7 +5,13 @@ export enum EnemyType {
   IceThief = "IceThief",
 }
 
-export default {
+export interface EnemyData {
+  sprite: string;
+  tint: number;
+  loot: Partial<Record<ItemSprite, number>>;
+}
+
+const enemies: Record<EnemyType, EnemyData> = {
   [EnemyType.EvilThief]: {
     sprite: "sprites/player.png",
     tint: 0xff0000,
@@ -23,3 +29,5 @@ export default {
     },
   },
 };
+
+export default enemies;

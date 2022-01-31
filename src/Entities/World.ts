@@ -90,8 +90,12 @@ export default class World {
     });
     const index = Phaser.Math.Between(0, currentSpawnableTiles.length);
     const spawnTile = currentSpawnableTiles[index];
+    if (!spawnTile) return;
     const spawnPosition = { x: spawnTile.pixelX, y: spawnTile.pixelY };
-    const enemy = new Enemy(this.scene, EnemyType.EvilThief);
+    const types = [EnemyType.EvilThief, EnemyType.IceThief];
+    const idx = Phaser.Math.Between(0, types.length - 1);
+    const type = types[idx];
+    const enemy = new Enemy(this.scene, type);
     enemy.create(spawnPosition.x, spawnPosition.y);
     this.enemies.add(enemy);
   }
