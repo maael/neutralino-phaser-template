@@ -13,6 +13,7 @@ export default class World {
   loot: Phaser.GameObjects.Group;
   BLOCKING_TILES = [13];
   map: Phaser.Tilemaps.Tilemap;
+  spawnableTiles: Phaser.Tilemaps.Tile[];
   constructor(scene) {
     this.scene = scene;
   }
@@ -71,19 +72,27 @@ export default class World {
     this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.Bone);
     this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.BronzeCoin);
     this.spawnLoot(this.player.x, this.player.y + 2, ItemSprite.BlueNecklace);
+    this.spawnableTiles = this.map.filterTiles((i) => {
+      return (
+        i.index &&
+        ![i.collideDown, i.collideUp, i.collideRight, i.collideLeft].some(
+          Boolean
+        )
+      );
+    });
   }
   spawnEnemy() {
+    const camera = this.scene.cameras.main;
+    const cameraRect = camera.worldView;
+    const currentSpawnableTiles = this.spawnableTiles.filter((t) => {
+      const wv = camera.getWorldPoint(t.pixelX, t.pixelY);
+      return !cameraRect.contains(wv.x, wv.y);
+    });
+    const index = Phaser.Math.Between(0, currentSpawnableTiles.length);
+    const spawnTile = currentSpawnableTiles[index];
+    const spawnPosition = { x: spawnTile.pixelX, y: spawnTile.pixelY };
     const enemy = new Enemy(this.scene, EnemyType.EvilThief);
-    enemy.create(
-      Math.max(
-        10,
-        Phaser.Math.Between(this.player.x - 100, this.player.x + 100)
-      ),
-      Math.max(
-        10,
-        Phaser.Math.Between(this.player.y - 100, this.player.y + 100)
-      )
-    );
+    enemy.create(spawnPosition.x, spawnPosition.y);
     this.enemies.add(enemy);
   }
   spawnLoot(x: number, y: number, item: ItemSprite) {

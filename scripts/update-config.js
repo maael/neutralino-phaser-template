@@ -11,6 +11,7 @@ const projectName = path.basename(process.cwd());
 config.modes.window.title = projectName;
 config.cli.binaryName = projectName;
 config.modes.window.enableInspector = environment !== "production";
+config.modes.window.alwaysOnTop = environment !== "production";
 config.globalVariables.ENVIRONMENT = environment;
 config.modes.browser.globalVariables.ENVIRONMENT = environment;
 
