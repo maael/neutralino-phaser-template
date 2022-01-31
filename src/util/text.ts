@@ -8,6 +8,7 @@ export function floatingText(
   duration: number = 800,
   textSize: number = 8
 ) {
+  if (!scene) return;
   const floatingText = scene.add
     .text(x, y, text, {
       color: color,

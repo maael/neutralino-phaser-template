@@ -39,6 +39,10 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet("lightning", "fx/lightning.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
   }
   create() {
     const screenCenterX =
@@ -56,10 +60,19 @@ export class PreloadScene extends Phaser.Scene {
      * fx
      */
     this.anims.create({
-      key: "orb-rotate-spin",
+      key: "orb-rotate",
       frames: this.anims.generateFrameNumbers("orb-rotate", {
         start: 0,
         end: 3,
+      }),
+      frameRate: 24,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "lightning",
+      frames: this.anims.generateFrameNumbers("lightning", {
+        start: 0,
+        end: 6,
       }),
       frameRate: 24,
       repeat: -1,

@@ -15,6 +15,7 @@ export default class Player extends Actor {
     skill2: Phaser.Input.Keyboard.Key;
   };
   bullets: Bullets;
+  lightning: Bullets;
   light: Phaser.GameObjects.Light;
   inventory: ItemSprite[] = [];
   constructor(scene) {
@@ -35,6 +36,7 @@ export default class Player extends Actor {
       ),
     };
     this.bullets = new Bullets(this.scene, "orb-rotate");
+    this.lightning = new Bullets(this.scene, "lightning");
 
     this.light = this.scene.lights.addLight(0, 0, 400, 0xdddddd, 0.8);
   }
@@ -86,22 +88,15 @@ export default class Player extends Actor {
     return { sprintModifier };
   }
   handleAction(time: number, delta: number) {
-    if (this.controls.skill1.isDown) {
-      const particles = this.scene.add.particles("orb-rotate");
-      particles.createEmitter({
-        alpha: { start: 0.5, end: 0.5 },
-        speed: 2,
-        scale: 0.2,
-        lifespan: { min: 1, max: 1 },
-        blendMode: Phaser.BlendModes.ADD,
-        frequency: 1,
-        maxParticles: 1,
-        x: 0,
-        y: 0,
-      });
-      this.add(particles);
+    if (Phaser.Input.Keyboard.JustDown(this.controls.skill1)) {
+      this.lightning.fireBullet(
+        this.x,
+        this.y,
+        this.directions.x,
+        this.directions.y
+      );
     }
-    if (this.controls.skill2.isDown) {
+    if (Phaser.Input.Keyboard.JustDown(this.controls.skill2)) {
       this.bullets.fireBullet(
         this.x,
         this.y,

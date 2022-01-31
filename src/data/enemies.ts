@@ -23,9 +23,10 @@ const enemies: Record<EnemyType, EnemyData> = {
   },
   [EnemyType.IceThief]: {
     sprite: "sprites/player.png",
-    tint: 0x0000ff,
+    tint: 0x72a4d4,
     loot: {
       [ItemSprite.Bone]: 0.3,
+      [ItemSprite.BlueNecklace]: 0.3,
     },
   },
 };

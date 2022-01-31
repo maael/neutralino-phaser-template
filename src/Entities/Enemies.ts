@@ -14,8 +14,8 @@ export default class Enemy extends Actor {
   rangeCircle: Phaser.GameObjects.Shape;
   target: null | { x: number; y: number; isPlayer: boolean };
   lastPlace: { x: number; y: number };
-  speed = 30;
-  aggroRange = 150;
+  speed = 35;
+  aggroRange = 175;
   isInitialised = false;
   debug: false;
   light: Phaser.GameObjects.Light;

@@ -6,16 +6,46 @@ export class HudScene extends Phaser.Scene {
   constructor() {
     super({ key: Scene.Hud });
   }
-  create() {
-    this.add.image(40, 40, "blue-button").setScale(2);
-    this.add.image(40, 38, "orb-rotate", 0).setScale(0.8);
-    this.add.text(36, 55, "Q", {
-      color: "#FFFFFF",
-      fontFamily: "FutilePro",
-      resolution: devicePixelRatio,
-      fontSize: "16px",
-      align: "center",
+  addButtons() {
+    const buttons = [
+      {
+        sprite: "orb-rotate",
+        button: "Q",
+      },
+      {
+        sprite: "lightning",
+        button: "E",
+      },
+    ];
+    const group = this.add.group();
+    const width = buttons.length * 32;
+    buttons.forEach((item) => {
+      const container = this.add.container();
+      container.add(this.add.image(0, 0, "blue-button").setScale(2));
+      container.add(this.add.image(0, -2, item.sprite, 0).setScale(0.8));
+      container.add(
+        this.add.text(-4, 15, item.button, {
+          color: "#FFFFFF",
+          fontFamily: "FutilePro",
+          resolution: devicePixelRatio,
+          fontSize: "16px",
+          align: "center",
+        })
+      );
+
+      group.add(container);
     });
+    Phaser.Actions.GridAlign(group.getChildren(), {
+      width: width,
+      height: 100,
+      cellWidth: 32,
+      cellHeight: 32,
+      x: 40,
+      y: 40,
+    });
+  }
+  create() {
+    this.addButtons();
     events.on("died", (data) => {
       events.removeAllListeners();
       this.add

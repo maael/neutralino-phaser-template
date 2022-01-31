@@ -1,10 +1,27 @@
 import * as Phaser from "phaser";
 import Enemy from "./Enemies";
 
+const bulletData = {
+  lightning: {
+    speed: 300,
+    maxTime: 1000,
+    max: 5,
+    damage: 2,
+  },
+  "orb-rotate": {
+    speed: 150,
+    maxTime: 500,
+    max: 1,
+    damage: 4,
+  },
+};
+
 export class Bullets extends Phaser.Physics.Arcade.Group {
   damage = 2;
   constructor(scene, texture) {
     super(scene.physics.world, scene);
+    const data = bulletData[texture];
+    this.damage = data.damage;
 
     this.createMultiple({
       frameQuantity: 5,
@@ -12,7 +29,7 @@ export class Bullets extends Phaser.Physics.Arcade.Group {
       active: false,
       visible: false,
       classType: Bullet,
-      max: 1,
+      max: data.max,
     });
     this.scene.physics.add.overlap(
       this,
@@ -32,12 +49,33 @@ export class Bullets extends Phaser.Physics.Arcade.Group {
   }
 }
 
+const directionToRotation = {
+  [0]: {
+    [0]: 0,
+    [1]: 90,
+    [-1]: -90,
+  },
+  [1]: {
+    [0]: 0,
+    [1]: 45,
+    [-1]: -45,
+  },
+  [-1]: {
+    [0]: -180,
+    [1]: 135,
+    [-1]: -135,
+  },
+};
+
 export class Bullet extends Phaser.Physics.Arcade.Sprite {
   startTime?: number;
   maxTime = 1000;
   speed = 200;
   constructor(scene, x, y, texture) {
     super(scene, x, y, texture);
+    const data = bulletData[texture];
+    this.maxTime = data.maxTime;
+    this.speed = data.speed;
   }
   fire(x, y, xDirection, yDirection) {
     this.startTime = undefined;
@@ -47,7 +85,9 @@ export class Bullet extends Phaser.Physics.Arcade.Sprite {
     this.setVisible(true);
 
     this.setVelocity(this.speed * xDirection, this.speed * yDirection);
-    this.anims.play("orb-rotate-spin");
+    this.anims.play(this.texture);
+    const rotation = directionToRotation[xDirection][yDirection];
+    this.setRotation(rotation * (Math.PI / 180));
   }
   preUpdate(time, delta) {
     super.preUpdate(time, delta);
