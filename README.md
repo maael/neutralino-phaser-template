@@ -1,4 +1,5 @@
 # Neutralinojs React Tailwind Template
+
 ```sh
 git clone git@github.com:maael/neutralinojs-react-tailwind-template.git
 cd neutralinojs-react-tailwind-template
@@ -16,6 +17,10 @@ npm run dev
 All with hot reload, as parallel processes. Build will also purge the unused Tailwind, to keep sizes minimal.
 
 Probably the best way to add different screens is something like `react-router`.
+
+# Notes
+
+- `convert +append *.png lightning.png` - Combines images into a line using ImageMagick
 
 # Icon credits
 
