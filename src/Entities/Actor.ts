@@ -3,8 +3,8 @@ import * as Phaser from "phaser";
 export default class Actor extends Phaser.GameObjects.Container {
   body: Phaser.Physics.Arcade.Body;
   sprite: Phaser.GameObjects.Sprite;
-  speed = 8;
-  sprintModifier = 1.5;
+  speed = 55;
+  sprintModifier = 2;
   key: string;
   texture: string;
   directions = { x: 0, y: 1 };

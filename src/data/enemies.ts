@@ -9,6 +9,7 @@ export interface EnemyData {
   sprite: string;
   tint: number;
   loot: Partial<Record<ItemSprite, number>>;
+  xp: number;
 }
 
 const enemies: Record<EnemyType, EnemyData> = {
@@ -20,6 +21,7 @@ const enemies: Record<EnemyType, EnemyData> = {
       [ItemSprite.HealthPotion1]: 0.3,
       [ItemSprite.BronzeCoin]: 0.3,
     },
+    xp: 5,
   },
   [EnemyType.IceThief]: {
     sprite: "sprites/player.png",
@@ -28,6 +30,7 @@ const enemies: Record<EnemyType, EnemyData> = {
       [ItemSprite.Bone]: 0.3,
       [ItemSprite.BlueNecklace]: 0.3,
     },
+    xp: 10,
   },
 };
 

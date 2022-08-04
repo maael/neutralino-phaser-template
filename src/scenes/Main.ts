@@ -33,7 +33,7 @@ export class MainScene extends Phaser.Scene {
     this.meta.startedAt = time;
     this.world.player.update(time, delta);
     if (
-      this.world.enemies.getLength() < (DEBUG ? 0 : 1000) &&
+      this.world.enemies.getLength() < (DEBUG ? 5 : 200) &&
       Math.random() > 0.9
     ) {
       this.world.spawnEnemy();

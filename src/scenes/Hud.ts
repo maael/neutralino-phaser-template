@@ -1,8 +1,20 @@
 import * as Phaser from "phaser";
 import events from "~/util/events";
+import { textStyles } from "~/util/text";
 import { Scene } from "../types";
+import { MainScene } from "./Main";
 
 export class HudScene extends Phaser.Scene {
+  fps: Phaser.GameObjects.Text;
+  playerHud: Partial<{
+    health: Phaser.GameObjects.Text;
+    speedX: Phaser.GameObjects.Text;
+    speedY: Phaser.GameObjects.Text;
+    enemies: Phaser.GameObjects.Text;
+    xp: Phaser.GameObjects.Text;
+    level: Phaser.GameObjects.Text;
+  }> = {};
+
   constructor() {
     super({ key: Scene.Hud });
   }
@@ -44,8 +56,29 @@ export class HudScene extends Phaser.Scene {
       y: 40,
     });
   }
+  addPlayerInfo() {
+    this.playerHud.health = this.add
+      .text(this.cameras.main.width - 4, 32, `Health: 0`, textStyles.small)
+      .setOrigin(1, 1);
+    this.playerHud.speedX = this.add
+      .text(this.cameras.main.width - 4, 48, `Speed X: 0`, textStyles.small)
+      .setOrigin(1, 1);
+    this.playerHud.speedY = this.add
+      .text(this.cameras.main.width - 4, 64, `Speed Y: 0`, textStyles.small)
+      .setOrigin(1, 1);
+    this.playerHud.enemies = this.add
+      .text(this.cameras.main.width - 4, 80, `Enemies: 0`, textStyles.small)
+      .setOrigin(1, 1);
+    this.playerHud.level = this.add
+      .text(this.cameras.main.width - 4, 96, `Level: 0`, textStyles.small)
+      .setOrigin(1, 1);
+    this.playerHud.xp = this.add
+      .text(this.cameras.main.width - 4, 112, `XP: 0`, textStyles.small)
+      .setOrigin(1, 1);
+  }
   create() {
     this.addButtons();
+    if (DEBUG) this.addPlayerInfo();
     events.on("died", (data) => {
       events.removeAllListeners();
       this.add
@@ -127,5 +160,43 @@ export class HudScene extends Phaser.Scene {
         this.scene.start(Scene.Preload);
       });
     });
+    this.fps = this.add
+      .text(this.cameras.main.width - 4, 16, `0fps`, {
+        color: "#FFFFFF",
+        fontFamily: "FutilePro",
+        resolution: devicePixelRatio,
+        fontSize: "16px",
+        align: "center",
+      })
+      .setOrigin(1, 1);
+  }
+  update(time, delta) {
+    if (this.fps) {
+      this.fps.setText(`${this.game.loop.actualFps.toFixed(0)}fps`);
+      this.fps.update(time, delta);
+    }
+    const mainScene = this.game.scene.getScene(Scene.Main);
+    this.playerHud.health?.setText(
+      `Health: ${(mainScene as MainScene).world.player.health}`
+    );
+    this.playerHud.speedX?.setText(
+      `Speed X: ${(mainScene as MainScene).world.player.body.velocity.x.toFixed(
+        0
+      )}`
+    );
+    this.playerHud.speedY?.setText(
+      `Speed Y: ${(mainScene as MainScene).world.player.body.velocity.y.toFixed(
+        0
+      )}`
+    );
+    this.playerHud.enemies?.setText(
+      `Enemies: ${(mainScene as MainScene).world.enemies.getLength()}`
+    );
+    this.playerHud.level?.setText(
+      `Level: ${(mainScene as MainScene).world.player.level}`
+    );
+    this.playerHud.xp?.setText(
+      `XP: ${(mainScene as MainScene).world.player.xp}`
+    );
   }
 }

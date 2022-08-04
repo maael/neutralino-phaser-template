@@ -9,8 +9,8 @@ const bulletData = {
     damage: 2,
   },
   "orb-rotate": {
-    speed: 150,
-    maxTime: 500,
+    speed: 50,
+    maxTime: 1000,
     max: 1,
     damage: 4,
   },

@@ -42,6 +42,13 @@ export default class Loot extends Phaser.GameObjects.Container {
     scene.add.existing(this);
     return this;
   }
+  destroyAll() {
+    this.each((item) => {
+      item.destroy();
+    });
+    this.scene.tweens.killTweensOf(this);
+    this.destroy();
+  }
 }
 
 export function chooseFromTable(spec: { [k: number]: number }) {

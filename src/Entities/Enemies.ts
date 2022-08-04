@@ -57,6 +57,7 @@ export default class Enemy extends Actor {
         x: this.x,
         y: this.y,
         type: this.key,
+        meta: this.meta,
       });
     }
   }

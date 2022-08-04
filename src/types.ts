@@ -16,3 +16,8 @@ export enum ItemSprite {
   HealthPotion2 = 239,
   ManaPotion2 = 240,
 }
+
+export enum Tween {
+  Power0 = "Power0",
+  Power1 = "Power1",
+}
