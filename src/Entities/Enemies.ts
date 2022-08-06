@@ -6,10 +6,11 @@ import enemyData, { EnemyType, EnemyData } from "../data/enemies";
 import { floatingText } from "~/util/text";
 
 export default class Enemy extends Actor {
-  meta: EnemyData;
+  meta: EnemyData & { type?: EnemyType };
   constructor(scene, type: EnemyType) {
-    super(scene, type, enemyData[type].sprite);
+    super(scene, enemyData[type].spriteKey, enemyData[type].sprite);
     this.meta = enemyData[type];
+    this.meta.type = type;
   }
   rangeCircle: Phaser.GameObjects.Shape;
   target: null | { x: number; y: number; isPlayer: boolean };
@@ -45,7 +46,7 @@ export default class Enemy extends Actor {
       this.x - 4 + Phaser.Math.Between(-6, 6),
       this.y - 21 + Phaser.Math.Between(-1, 6),
       `-${damage}`,
-      "#FF0000",
+      0xff0000,
       2,
       800,
       6
@@ -56,7 +57,7 @@ export default class Enemy extends Actor {
       events.emit("kill:enemy", {
         x: this.x,
         y: this.y,
-        type: this.key,
+        type: this.meta.type,
         meta: this.meta,
       });
     }
@@ -77,7 +78,7 @@ export default class Enemy extends Actor {
       true
     );
     const player = [...bodies].find(
-      (b) => (b.gameObject as any).key === "player"
+      (b) => (b.gameObject as any).isPlayer && b.gameObject.active
     );
     if (this.debug)
       this.rangeCircle.setFillStyle(this.meta.tint, player ? 0.2 : 0.05);

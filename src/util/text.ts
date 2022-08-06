@@ -5,7 +5,7 @@ export function floatingText(
   x: number,
   y: number,
   text: string,
-  color: string,
+  color: number,
   yModifier: number,
   duration: number = 800,
   textSize: number = 8,
@@ -14,17 +14,11 @@ export function floatingText(
 ) {
   if (!scene) return;
   const floatingText = scene.add
-    .text(x, y, text, {
-      color: color,
-      fontFamily: "FutilePro",
-      resolution: devicePixelRatio,
-      fontSize: `${textSize}px`,
-      align: "center",
-      stroke: "#000000",
-      strokeThickness: 1,
-    })
+    .bitmapText(x, y, "FutilePro", text, textSize)
     .setAlpha(0.9)
-    .setOrigin(0.5, 1);
+    .setOrigin(0.5, 0.5)
+    .setDropShadow(-1, 2, 0x000000, 1)
+    .setTint(color);
   scene.tweens.add({
     targets: floatingText,
     props: {

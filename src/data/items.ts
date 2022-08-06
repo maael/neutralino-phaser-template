@@ -11,7 +11,7 @@ export default {
       player.x - 8,
       player.y - 23,
       `+${heal}`,
-      "#00FF00",
+      0x00ff00,
       2
     );
   },

@@ -27,6 +27,7 @@ export default class Player extends Actor {
   inventory: ItemSprite[] = [];
   level: number = 1;
   xp: number = 0;
+  isPlayer: boolean = true;
   constructor(scene) {
     super(scene, "player", "sprites/player.png", 0x00ff00);
   }
@@ -40,7 +41,7 @@ export default class Player extends Actor {
       this.floatingText("LEVEL UP!", {
         duration: 2400,
         size: 16,
-        colour: "#FFD700",
+        colour: 0xffd700,
         tween: Tween.Power0,
         delay: 200,
       });
@@ -52,7 +53,7 @@ export default class Player extends Actor {
   floatingText(
     text: string,
     config: Partial<{
-      colour: string;
+      colour: number;
       duration: number;
       size: number;
       tween: Tween;
@@ -64,7 +65,7 @@ export default class Player extends Actor {
       this.x,
       this.y - 21 + Phaser.Math.Between(-1, 6),
       text,
-      config.colour || "#FFFFFF",
+      config.colour || 0xffffff,
       2,
       config.duration,
       config.size,
@@ -99,7 +100,7 @@ export default class Player extends Actor {
     if (obj instanceof Enemy) {
       this.health = Math.max(0, this.health - obj.damage);
       if (this.active) {
-        this.floatingText(`-${obj.damage}`, { colour: "#FF0000" });
+        this.floatingText(`-${obj.damage}`, { colour: 0xff0000 });
       }
       if (this.health === 0 && this.active) {
         this.light.intensity = 0;

@@ -7,6 +7,7 @@ export enum EnemyType {
 
 export interface EnemyData {
   sprite: string;
+  spriteKey: string;
   tint: number;
   loot: Partial<Record<ItemSprite, number>>;
   xp: number;
@@ -15,6 +16,7 @@ export interface EnemyData {
 const enemies: Record<EnemyType, EnemyData> = {
   [EnemyType.EvilThief]: {
     sprite: "sprites/player.png",
+    spriteKey: "player",
     tint: 0xff0000,
     loot: {
       [ItemSprite.Bone]: 0.2,
@@ -25,6 +27,7 @@ const enemies: Record<EnemyType, EnemyData> = {
   },
   [EnemyType.IceThief]: {
     sprite: "sprites/player.png",
+    spriteKey: "player",
     tint: 0x72a4d4,
     loot: {
       [ItemSprite.Bone]: 0.3,

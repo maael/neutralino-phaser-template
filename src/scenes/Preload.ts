@@ -12,6 +12,15 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image("tiles-1", "tiles/jawbreaker_tiles.png");
 
     /**
+     * Bitmap fonts
+     */
+    this.load.bitmapFont(
+      "FutilePro",
+      "fonts/FutilePro.png",
+      "fonts/FutilePro.xml"
+    );
+
+    /**
      * UX
      */
     this.load.image("blue-button", "ux/BlueBtn.png");
