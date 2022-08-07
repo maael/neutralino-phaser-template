@@ -3,6 +3,7 @@ import { MainScene } from "./scenes/Main";
 import { HudScene } from "./scenes/Hud";
 import { PreloadScene } from "./scenes/Preload";
 import { Scene } from "./types";
+import { PauseScene } from "./scenes/Pause";
 
 DEBUG = false;
 
@@ -30,7 +31,7 @@ Neutralino.events.on("ready", () => {
     },
     zoom: 1.00000001,
     antialiasGL: false,
-    scene: [PreloadScene, HudScene, MainScene],
+    scene: [PreloadScene, HudScene, MainScene, PauseScene],
   };
   const game = new Phaser.Game(config);
   game.scene.start(Scene.Preload);

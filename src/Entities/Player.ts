@@ -20,6 +20,7 @@ export default class Player extends Actor {
     sprint: Phaser.Input.Keyboard.Key;
     skill1: Phaser.Input.Keyboard.Key;
     skill2: Phaser.Input.Keyboard.Key;
+    pause: Phaser.Input.Keyboard.Key;
   };
   bullets: Bullets;
   lightning: Bullets;
@@ -85,6 +86,9 @@ export default class Player extends Actor {
       ),
       skill2: this.scene.input.keyboard.addKey(
         Phaser.Input.Keyboard.KeyCodes.Q
+      ),
+      pause: this.scene.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.ESC
       ),
     };
     this.bullets = new Bullets(this.scene, "orb-rotate");

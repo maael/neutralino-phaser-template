@@ -4,6 +4,7 @@ export enum Scene {
   Main = "Main",
   Hud = "Hud",
   Settings = "Settings",
+  Pause = "Pause",
 }
 
 export enum ItemSprite {

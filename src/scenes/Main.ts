@@ -28,6 +28,14 @@ export class MainScene extends Phaser.Scene {
     events.on("kill:enemy", () => {
       this.meta.kills++;
     });
+    this.world.player.controls.pause.addListener(
+      Phaser.Input.Keyboard.Events.DOWN,
+      (e) => {
+        this.game.scene.pause(Scene.Main);
+        this.game.scene.start(Scene.Pause);
+        this.game.scene.bringToTop(Scene.Pause);
+      }
+    );
   }
   update(time, delta) {
     this.meta.startedAt = time;
