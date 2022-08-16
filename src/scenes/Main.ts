@@ -28,12 +28,22 @@ export class MainScene extends Phaser.Scene {
     events.on("kill:enemy", () => {
       this.meta.kills++;
     });
-    this.world.player.controls.pause.addListener(
+    this.world.player.controls.pause.keyboard.addListener(
       Phaser.Input.Keyboard.Events.DOWN,
       (e) => {
         this.game.scene.pause(Scene.Main);
         this.game.scene.start(Scene.Pause);
         this.game.scene.bringToTop(Scene.Pause);
+      }
+    );
+    this.input.gamepad.on(
+      Phaser.Input.Gamepad.Events.BUTTON_DOWN,
+      (_pad, button) => {
+        if (this.world.player.controls.pause.gamepad?.index === button.index) {
+          this.game.scene.pause(Scene.Main);
+          this.game.scene.start(Scene.Pause);
+          this.game.scene.bringToTop(Scene.Pause);
+        }
       }
     );
   }

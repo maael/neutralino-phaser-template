@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import items from "~/data/items";
 import { ItemSprite, Tween } from "~/types";
+import { parseGamepad } from "~/util/controls";
 import events from "~/util/events";
 import { floatingText } from "~/util/text";
 import Actor from "./Actor";
@@ -14,13 +15,48 @@ const levelXpMap = {
   3: 40,
 };
 
+/**
+ * Button indexes
+ * A = 0
+ * B = 1
+ * X = 2
+ * Y = 3
+ */
+enum XBOX_BUTTONS {
+  A = 0,
+  B = 1,
+  X = 2,
+  Y = 3,
+  LEFT_BUMPER = 4,
+  RIGHT_BUMPER = 5,
+  LEFT_TRIGGER = 6,
+  RIGHT_TRIGGER = 7,
+  SELECT = 8,
+  START = 9,
+  LEFT_THUMB = 10,
+  RIGHT_THUMB = 11,
+}
+
 export default class Player extends Actor {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   controls: {
-    sprint: Phaser.Input.Keyboard.Key;
-    skill1: Phaser.Input.Keyboard.Key;
-    skill2: Phaser.Input.Keyboard.Key;
-    pause: Phaser.Input.Keyboard.Key;
+    sprint: {
+      keyboard: Phaser.Input.Keyboard.Key;
+      gamepad: Phaser.Input.Gamepad.Button | null;
+    };
+    skill1: {
+      keyboard: Phaser.Input.Keyboard.Key;
+      gamepad: Phaser.Input.Gamepad.Button | null;
+    };
+    skill2: {
+      keyboard: Phaser.Input.Keyboard.Key;
+      gamepad: Phaser.Input.Gamepad.Button | null;
+    };
+    pause: {
+      keyboard: Phaser.Input.Keyboard.Key;
+      gamepad: Phaser.Input.Gamepad.Button | null;
+    };
+    _gamepad: Phaser.Input.Gamepad.Gamepad | null;
   };
   bullets: Bullets;
   lightning: Bullets;
@@ -78,19 +114,43 @@ export default class Player extends Actor {
     super.create(x, y);
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.controls = {
-      sprint: this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.SHIFT
-      ),
-      skill1: this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.E
-      ),
-      skill2: this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.Q
-      ),
-      pause: this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.ESC
-      ),
+      sprint: {
+        keyboard: this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.SHIFT
+        ),
+        gamepad: this.scene.input.gamepad?.pad1?.buttons[XBOX_BUTTONS.Y],
+      },
+      skill1: {
+        keyboard: this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.E
+        ),
+        gamepad: this.scene.input.gamepad?.pad1?.buttons[XBOX_BUTTONS.A],
+      },
+      skill2: {
+        keyboard: this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.Q
+        ),
+        gamepad: this.scene.input.gamepad?.pad1?.buttons[XBOX_BUTTONS.B],
+      },
+      pause: {
+        keyboard: this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.ESC
+        ),
+        gamepad: this.scene.input.gamepad?.pad1?.buttons[XBOX_BUTTONS.START],
+      },
+      _gamepad: this.scene.input.gamepad?.pad1,
     };
+    this.scene.input.gamepad.once("connected", () => {
+      this.controls._gamepad = this.scene.input.gamepad?.pad1;
+      this.controls.sprint.gamepad =
+        this.controls._gamepad.buttons[XBOX_BUTTONS.Y];
+      this.controls.skill1.gamepad =
+        this.controls._gamepad.buttons[XBOX_BUTTONS.A];
+      this.controls.skill2.gamepad =
+        this.controls._gamepad.buttons[XBOX_BUTTONS.B];
+      this.controls.pause.gamepad =
+        this.controls._gamepad.buttons[XBOX_BUTTONS.START];
+    });
     this.bullets = new Bullets(this.scene, "orb-rotate");
     this.lightning = new Bullets(this.scene, "lightning");
 
@@ -130,18 +190,24 @@ export default class Player extends Actor {
   updateVelocity(time: number, delta: number) {
     let sprintModifier = 1;
 
-    if (this.controls.sprint.isDown) {
+    if (
+      this.controls.sprint.keyboard.isDown ||
+      this.controls.sprint.gamepad?.pressed
+    ) {
       sprintModifier = this.sprintModifier;
     }
-    if (this.cursors.left.isDown) {
+
+    const gamepad = parseGamepad(this.controls._gamepad);
+
+    if (this.cursors.left.isDown || gamepad?.left) {
       this.body.setVelocityX(-this.speed * sprintModifier);
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || gamepad?.right) {
       this.body.setVelocityX(this.speed * sprintModifier);
     }
 
-    if (this.cursors.up.isDown) {
+    if (this.cursors.up.isDown || gamepad?.up) {
       this.body.setVelocityY(-this.speed * sprintModifier);
-    } else if (this.cursors.down.isDown) {
+    } else if (this.cursors.down.isDown || gamepad?.down) {
       this.body.setVelocityY(this.speed * sprintModifier);
     }
 
@@ -151,7 +217,10 @@ export default class Player extends Actor {
     return { sprintModifier };
   }
   handleAction(time: number, delta: number) {
-    if (Phaser.Input.Keyboard.JustDown(this.controls.skill1)) {
+    if (
+      Phaser.Input.Keyboard.JustDown(this.controls.skill1.keyboard) ||
+      this.controls.skill1.gamepad?.pressed
+    ) {
       this.lightning.fireBullet(
         this.x,
         this.y,
@@ -159,7 +228,10 @@ export default class Player extends Actor {
         this.directions.y
       );
     }
-    if (Phaser.Input.Keyboard.JustDown(this.controls.skill2)) {
+    if (
+      Phaser.Input.Keyboard.JustDown(this.controls.skill2.keyboard) ||
+      this.controls.skill2.gamepad?.pressed
+    ) {
       this.bullets.fireBullet(
         this.x,
         this.y,

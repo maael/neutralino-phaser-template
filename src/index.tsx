@@ -21,6 +21,7 @@ Neutralino.events.on("ready", () => {
     pixelArt: true,
     type: Phaser.WEBGL,
     roundPixels: false,
+    autoFocus: true,
     scale: {
       zoom: 1,
       mode: Phaser.Scale.FIT,
@@ -32,6 +33,9 @@ Neutralino.events.on("ready", () => {
     zoom: 1.00000001,
     antialiasGL: false,
     scene: [PreloadScene, HudScene, MainScene, PauseScene],
+    input: {
+      gamepad: true,
+    },
   };
   const game = new Phaser.Game(config);
   game.scene.start(Scene.Preload);
